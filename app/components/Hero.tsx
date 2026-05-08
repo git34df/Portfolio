@@ -151,7 +151,7 @@ export default function Hero() {
             style={{ display: "flex", gap: "12px", flexWrap: "wrap" as const }}
           >
             <motion.a
-              href="#work"
+              href="https://wa.me/922739135?text=Hola%20Melita%20%F0%9F%91%8B%0A%0AMe%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20tus%20servicios%20audiovisuales%20%F0%9F%93%B8%F0%9F%92%97%2C%20en%20el%20rubro%20de%20..."
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               style={{
