@@ -30,16 +30,17 @@ export default function Contact() {
   }
 
   const inputStyle: React.CSSProperties = {
-    width:           "100%",
-    background:      "transparent",
-    border:          "none",
-    borderBottom:    "1px solid rgba(252,187,226,0.18)",
-    padding:         "12px 0",
-    fontSize:        "14px",
-    fontFamily:      "var(--font-body)",
-    color:           "var(--blush)",
-    outline:         "none",
-    fontWeight:      300,
+    width:        "100%",
+    background:   "transparent",
+    border:       "none",
+    borderBottom: "1px solid rgba(252,187,226,0.18)",
+    padding:      "12px 0",
+    fontSize:     "14px",
+    fontFamily:   "var(--font-body)",
+    color:        "var(--blush)",
+    outline:      "none",
+    fontWeight:   300,
+    boxSizing:    "border-box",
   };
 
   const labelStyle: React.CSSProperties = {
@@ -81,16 +82,24 @@ export default function Contact() {
 
       {/* Contenido principal */}
       <div style={{ flex: 1, display: "flex", alignItems: "center" }}>
-        <div style={{
-          width:               "100%",
-          maxWidth:            "1000px",
-          margin:              "0 auto",
-          padding:             "80px 80px",
-          display:             "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap:                 "80px",
-          alignItems:          "start",
-        }}>
+        <div
+          className="contact-grid"
+          style={{
+            width:    "100%",
+            maxWidth: "1000px",
+            margin:   "0 auto",
+            /* móvil: 40px 20px | desktop: 80px */
+            padding:  "clamp(40px, 8vw, 80px) clamp(20px, 6vw, 80px)",
+            display:  "grid",
+            /*
+             * mobile  : 1 columna (stack)
+             * desktop : 2 columnas iguales (via CSS)
+             */
+            gridTemplateColumns: "1fr",
+            gap:                 "clamp(40px, 6vw, 80px)",
+            alignItems:          "start",
+          }}
+        >
 
           {/* ── LEFT — Headline ── */}
           <motion.div
@@ -116,7 +125,7 @@ export default function Contact() {
             <h2 style={{
               fontFamily:    "var(--font-display)",
               color:         "var(--blush)",
-              fontSize:      "clamp(2.4rem, 4vw, 3.6rem)",
+              fontSize:      "clamp(2.2rem, 5vw, 3.6rem)",
               fontWeight:    300,
               lineHeight:    1.05,
               letterSpacing: "-0.025em",
@@ -129,10 +138,10 @@ export default function Contact() {
             {/* Descripción */}
             <p style={{
               fontFamily: "var(--font-body)",
-              fontSize:   "14px",
+              fontSize:   "clamp(13px, 1.5vw, 14px)",
               lineHeight: 1.75,
               color:      "rgba(254,231,245,0.45)",
-              maxWidth:   "300px",
+              maxWidth:   "360px",
               fontWeight: 300,
               margin:     "0 0 40px",
             }}>
@@ -153,7 +162,7 @@ export default function Contact() {
                   style={{
                     display:        "flex",
                     alignItems:     "center",
-                    gap:            "20px",
+                    gap:            "clamp(12px, 2vw, 20px)",
                     textDecoration: "none",
                   }}
                 >
@@ -170,10 +179,12 @@ export default function Contact() {
                   </span>
                   <span style={{
                     fontFamily:  "var(--font-body)",
-                    fontSize:    "13px",
+                    fontSize:    "clamp(11px, 1.3vw, 13px)",
                     color:       "var(--pink)",
                     opacity:     0.85,
                     transition:  "opacity 0.2s",
+                    /* evita overflow del email en pantallas pequeñas */
+                    wordBreak:   "break-all",
                   }}>
                     {link.value}
                   </span>
@@ -203,7 +214,7 @@ export default function Contact() {
                 }}
               >
                 <p style={{ fontFamily: "var(--font-display)", fontSize: "4rem", color: "var(--pink)", margin: 0 }}>✦</p>
-                <p style={{ fontFamily: "var(--font-display)", fontSize: "1.8rem", fontWeight: 300, color: "var(--blush)", margin: 0 }}>
+                <p style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.4rem, 3vw, 1.8rem)", fontWeight: 300, color: "var(--blush)", margin: 0 }}>
                   Mensaje recibido.
                 </p>
                 <p style={{ fontFamily: "var(--font-body)", fontSize: "13px", color: "rgba(254,231,245,0.4)", margin: 0 }}>
@@ -211,7 +222,7 @@ export default function Contact() {
                 </p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "clamp(20px, 4vw, 32px)" }}>
 
                 {/* Nombre */}
                 <div>
@@ -288,17 +299,20 @@ export default function Contact() {
         animate={inView ? { opacity: 1 } : {}}
         transition={{ delay: 0.8, duration: 0.7 }}
         style={{
-          padding:        "20px 80px",
+          padding:        "clamp(16px, 2vw, 20px) clamp(20px, 6vw, 80px)",
           display:        "flex",
-          justifyContent: "space-between",
+          /* mobile: stack centrado | desktop: row space-between (via CSS) */
+          flexDirection:  "column",
           alignItems:     "center",
-          gap:            "16px",
+          gap:            "8px",
           borderTop:      "1px solid rgba(252,187,226,0.08)",
           maxWidth:       "1000px",
           width:          "100%",
           margin:         "0 auto",
           boxSizing:      "border-box" as const,
+          textAlign:      "center",
         }}
+        className="contact-footer"
       >
         <span style={{
           fontFamily:    "var(--font-body)",
@@ -309,14 +323,41 @@ export default function Contact() {
           © {new Date().getFullYear()} Melani Nazario
         </span>
         <span style={{
-          fontFamily:  "var(--font-display)",
-          fontStyle:   "italic",
-          fontSize:    "13px",
-          color:       "rgba(254,231,245,0.2)",
+          fontFamily: "var(--font-display)",
+          fontStyle:  "italic",
+          fontSize:   "13px",
+          color:      "rgba(254,231,245,0.2)",
         }}>
           Contenido que conecta ✦
         </span>
       </motion.footer>
+
+      {/* ── Responsive overrides ── */}
+      <style>{`
+        /* ── Desktop: 2 columnas (≥ 768px) ── */
+        @media (min-width: 768px) {
+          .contact-grid {
+            grid-template-columns: 1fr 1fr !important;
+          }
+        }
+
+        /* ── Footer horizontal (≥ 600px) ── */
+        @media (min-width: 600px) {
+          .contact-footer {
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            text-align: left !important;
+          }
+        }
+
+        /* ── Placeholder color ── */
+        #contact input::placeholder,
+        #contact textarea::placeholder {
+          color: rgba(252,187,226,0.22);
+          font-family: var(--font-body);
+          font-size: 13px;
+        }
+      `}</style>
     </section>
   );
 }

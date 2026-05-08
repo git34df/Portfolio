@@ -36,8 +36,8 @@ const projects = [
     result:
       "Potencié la presencia digital de Odontomanía con contenido estratégico y edición enfocada en alcance y conversión.",
     tags: ["Edición", "Diseño", "Creación de contenido Tiktok - IG"],
-    metric: "456 mil visualizaciones ",
-    metricLabel: "visualizaciones en TikTok",
+    metric: "456K",
+    metricLabel: "Visualizaciones en TikTok",
     image: "/Odontomania.mp4",
   },
 ];
@@ -80,7 +80,8 @@ export default function Work() {
           width: "100%",
           maxWidth: "1200px",
           margin: "0 auto",
-          padding: "80px 80px",
+          /* mobile: 20px | tablet: 40px | desktop: 80px */
+          padding: "clamp(40px, 8vw, 80px) clamp(20px, 6vw, 80px)",
         }}
       >
         {/* ── Header ── */}
@@ -90,12 +91,13 @@ export default function Work() {
           transition={{ duration: 0.8 }}
           style={{
             display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            gap: "40px",
-            marginBottom: "48px",
+            /* en mobile stack vertical; en ≥768px vuelve a row */
+            flexDirection: "column",
+            gap: "24px",
+            marginBottom: "clamp(32px, 5vw, 48px)",
           }}
         >
+          {/* Título */}
           <div>
             <div
               style={{
@@ -130,7 +132,8 @@ export default function Work() {
               style={{
                 fontFamily: "var(--font-display)",
                 color: "var(--blush)",
-                fontSize: "clamp(3rem, 6vw, 5rem)",
+                /* escala fluida: 2.4rem (mobile) → 5rem (desktop) */
+                fontSize: "clamp(2.4rem, 6vw, 5rem)",
                 fontWeight: 300,
                 lineHeight: 1.05,
                 letterSpacing: "-0.02em",
@@ -145,16 +148,16 @@ export default function Work() {
             </h2>
           </div>
 
+          {/* Subtítulo — en desktop se alinea a la derecha del heading */}
           <p
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: "14px",
+              fontSize: "clamp(13px, 1.5vw, 14px)",
               lineHeight: 1.7,
               color: "rgba(254,231,245,0.5)",
-              maxWidth: "240px",
+              maxWidth: "320px",
               fontWeight: 300,
               margin: 0,
-              flexShrink: 0,
             }}
           >
             Proyectos reales con marcas reales. Cada uno con un reto específico
@@ -183,19 +186,42 @@ export default function Work() {
                 overflow: "hidden",
                 cursor: "default",
                 transition: "background 0.3s ease",
+                /*
+                 * Layout strategy:
+                 *  - mobile  (<640px): una sola columna, todo apilado
+                 *  - tablet  (640-1023px): dos columnas (num+info | thumbnail)
+                 *  - desktop (≥1024px): grid original de 5 columnas
+                 *
+                 * Usamos un grid con áreas nombradas para facilitar el reflow.
+                 */
                 display: "grid",
-                gridTemplateColumns: "90px 1fr 1fr auto auto",
-                gap: "24px",
-                alignItems: "center",
-                padding: "28px 28px",
+                gridTemplateAreas: `
+                  "num brand thumb"
+                  "num result thumb"
+                  "metric metric thumb"
+                `,
+                gridTemplateColumns: "72px 1fr 140px",
+                gridTemplateRows: "auto auto auto",
+                gap: "clamp(10px, 2vw, 24px)",
+                padding: "clamp(18px, 3vw, 28px)",
+
+                /* Override para desktop ancho */
+                ...(typeof window !== "undefined" && window.innerWidth >= 1024
+                  ? {
+                      gridTemplateAreas: `"num brand result metric thumb"`,
+                      gridTemplateColumns: "90px 1fr 1fr auto 160px",
+                      gridTemplateRows: "auto",
+                      alignItems: "center",
+                    }
+                  : {}),
               }}
             >
               {/* Número */}
-              <div>
+              <div style={{ gridArea: "num", alignSelf: "start" }}>
                 <p
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "2rem",
+                    fontSize: "clamp(1.4rem, 3vw, 2rem)",
                     fontWeight: 300,
                     color: "var(--pink-deep)",
                     margin: 0,
@@ -218,11 +244,11 @@ export default function Work() {
               </div>
 
               {/* Brand + role */}
-              <div>
+              <div style={{ gridArea: "brand", alignSelf: "start" }}>
                 <h3
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "1.3rem",
+                    fontSize: "clamp(1rem, 2vw, 1.3rem)",
                     fontWeight: 400,
                     color: "var(--blush)",
                     margin: "0 0 6px",
@@ -250,31 +276,40 @@ export default function Work() {
               {/* Result */}
               <p
                 style={{
+                  gridArea: "result",
                   fontFamily: "var(--font-body)",
-                  fontSize: "13px",
+                  fontSize: "clamp(12px, 1.2vw, 13px)",
                   lineHeight: 1.7,
                   color: "rgba(254,231,245,0.55)",
                   margin: 0,
                   fontWeight: 300,
+                  alignSelf: "center",
                 }}
               >
                 {p.result}
               </p>
 
               {/* Metric + tags */}
-              <div style={{ minWidth: "140px" }}>
+              <div
+                style={{
+                  gridArea: "metric",
+                  minWidth: "120px",
+                  alignSelf: "center",
+                }}
+              >
                 <div
                   style={{
                     display: "flex",
                     alignItems: "center",
                     gap: "10px",
                     marginBottom: "10px",
+                    flexWrap: "wrap" as const,
                   }}
                 >
                   <p
                     style={{
                       fontFamily: "var(--font-display)",
-                      fontSize: "2rem",
+                      fontSize: "clamp(1.4rem, 3vw, 2rem)",
                       fontWeight: 300,
                       color: "var(--pink)",
                       margin: 0,
@@ -349,14 +384,16 @@ export default function Work() {
                   }
                 }}
                 style={{
-                  width: "160px",
-                  height: "100px",
+                  gridArea: "thumb",
+                  /* altura fluida: más compacta en mobile */
+                  width: "100%",
+                  height: "clamp(80px, 20vw, 100px)",
                   borderRadius: "8px",
                   overflow: "hidden",
                   position: "relative",
-                  flexShrink: 0,
                   background: "rgba(252,187,226,0.08)",
                   cursor: p.image.endsWith(".mp4") ? "pointer" : "default",
+                  alignSelf: "center",
                 }}
               >
                 {p.image.endsWith(".mp4") ? (
@@ -377,9 +414,7 @@ export default function Work() {
                     src={p.image}
                     alt={p.brand}
                     fill
-                    style={{
-                      objectFit: "cover",
-                    }}
+                    style={{ objectFit: "cover" }}
                   />
                 )}
 
@@ -441,7 +476,7 @@ export default function Work() {
                 alignItems: "center",
                 justifyContent: "center",
                 zIndex: 9999,
-                padding: "20px",
+                padding: "clamp(12px, 4vw, 20px)",
               }}
             >
               <motion.div
@@ -467,6 +502,8 @@ export default function Work() {
                     width: "100%",
                     height: "auto",
                     display: "block",
+                    /* evita que el video sea demasiado alto en mobile */
+                    maxHeight: "85dvh",
                   }}
                 />
 
@@ -494,6 +531,41 @@ export default function Work() {
           )}
         </AnimatePresence>
       </div>
+
+      {/*
+       * ── Responsive overrides via <style> tag ──────────────────────────────
+       *
+       * No podemos usar hooks de media query en inline styles de React sin
+       * añadir librerías extra, así que usamos un bloque <style> declarativo.
+       * Es la forma más limpia y performante para Next.js sin CSS Modules.
+       */}
+      <style>{`
+        /* ── Tablet (≥ 640px) ── */
+        @media (min-width: 640px) {
+          #work .project-card {
+            grid-template-areas:
+              "num brand  thumb"
+              "num result thumb"
+              "metric metric thumb" !important;
+            grid-template-columns: 72px 1fr 160px !important;
+          }
+        }
+
+        /* ── Desktop (≥ 1024px) ── */
+        @media (min-width: 1024px) {
+          #work .header-row {
+            flex-direction: row !important;
+            align-items: flex-end !important;
+            justify-content: space-between !important;
+          }
+          #work .project-card {
+            grid-template-areas: "num brand result metric thumb" !important;
+            grid-template-columns: 90px 1fr 1fr auto 160px !important;
+            grid-template-rows: auto !important;
+            align-items: center !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

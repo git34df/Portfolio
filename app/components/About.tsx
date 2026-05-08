@@ -3,7 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import Image from "next/image";
 
-const traits = ["Curiosa", "Visual", "Directa", "Detallista","Creativa","Proactiva"];
+const traits = ["Curiosa", "Visual", "Directa", "Detallista", "Creativa", "Proactiva"];
 
 const stats = [
   { icon: "★", num: "10+", label: "Marcas trabajadas" },
@@ -19,48 +19,43 @@ export default function About() {
       id="about"
       ref={ref}
       style={{
-        display:        "flex",
-        alignItems:     "stretch",
-        overflow:       "hidden",
-        background:     "var(--blush)",
-        minHeight:      "100vh",
-        position:       "relative",
+        display:    "flex",
+        alignItems: "stretch",
+        overflow:   "hidden",
+        background: "var(--blush)",
+        minHeight:  "100vh",
+        position:   "relative",
       }}
     >
-      <div style={{
-        width:               "100%",
-        display:             "grid",
-        gridTemplateColumns: "45% 55%",
-        minHeight:           "100vh",
-      }}>
+      <div className="about-grid" style={{ width: "100%" }}>
 
-        {/* ── LEFT — Imagen full height ── */}
+        {/* ── LEFT — Imagen ── */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="about-image-col"
           style={{
-            position: "relative",
-            overflow: "hidden",
-            minHeight: "100vh",
+            position:  "relative",
+            overflow:  "hidden",
+            minHeight: "300px",
           }}
         >
           {/* Blob rosa detrás */}
           <div style={{
-            position:     "absolute",
-            bottom:       "20%",
-            left:         "50%",
-            transform:    "translateX(-50%)",
-            width:        "340px",
-            height:       "340px",
-            borderRadius: "50%",
-            background:   "rgba(252,187,226,0.55)",
-            filter:       "blur(70px)",
-            zIndex:       1,
-            pointerEvents:"none",
+            position:      "absolute",
+            bottom:        "20%",
+            left:          "50%",
+            transform:     "translateX(-50%)",
+            width:         "340px",
+            height:        "340px",
+            borderRadius:  "50%",
+            background:    "rgba(252,187,226,0.55)",
+            filter:        "blur(70px)",
+            zIndex:        1,
+            pointerEvents: "none",
           }} />
-
-          {/* Overlay sutil */}
+          {/* Overlay fade right */}
           <div style={{
             position:      "absolute",
             inset:         0,
@@ -68,12 +63,11 @@ export default function About() {
             pointerEvents: "none",
             background:    "linear-gradient(to right, transparent 60%, var(--blush) 100%)",
           }} />
-
           <Image
             src="/IMG_3772.jpeg"
             alt="Melani Nazario"
             fill
-            sizes="45vw"
+            sizes="(max-width: 768px) 100vw, 45vw"
             style={{
               objectFit:      "cover",
               objectPosition: "center top",
@@ -88,9 +82,8 @@ export default function About() {
           display:        "flex",
           flexDirection:  "column",
           justifyContent: "center",
-          padding:        "80px 80px 80px 60px",
+          padding:        "clamp(40px, 8vw, 80px) clamp(20px, 5vw, 80px) clamp(40px, 8vw, 80px) clamp(20px, 5vw, 60px)",
           gap:            "28px",
-          maxWidth:       "560px",
         }}>
 
           {/* Label */}
@@ -100,10 +93,7 @@ export default function About() {
             transition={{ duration: 0.6 }}
             style={{ display: "flex", alignItems: "center", gap: "14px" }}
           >
-            <span style={{
-              width: "28px", height: "1px",
-              background: "var(--pink-deep)", display: "block",
-            }} />
+            <span style={{ width: "28px", height: "1px", background: "var(--pink-deep)", display: "block" }} />
             <span style={{
               fontFamily:    "var(--font-body)",
               fontSize:      "10px",
@@ -123,7 +113,7 @@ export default function About() {
             style={{
               fontFamily:    "var(--font-display)",
               color:         "var(--noir)",
-              fontSize:      "clamp(2.4rem, 4vw, 3.4rem)",
+              fontSize:      "clamp(2rem, 5vw, 3.4rem)",
               fontWeight:    600,
               lineHeight:    1.08,
               letterSpacing: "-0.025em",
@@ -131,11 +121,7 @@ export default function About() {
             }}
           >
             Más que{" "}
-            <em style={{
-              color:      "var(--pink-deep)",
-              fontStyle:  "italic",
-              fontWeight: 400,
-            }}>
+            <em style={{ color: "var(--pink-deep)", fontStyle: "italic", fontWeight: 400 }}>
               publicar,
             </em>
             <br />
@@ -204,7 +190,7 @@ export default function About() {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.45 }}
-            style={{ display: "flex", gap: "40px", marginTop: "8px" }}
+            style={{ display: "flex", gap: "clamp(20px, 5vw, 40px)", marginTop: "8px", flexWrap: "wrap" as const }}
           >
             {stats.map((s) => (
               <motion.div
@@ -251,9 +237,29 @@ export default function About() {
               </motion.div>
             ))}
           </motion.div>
-
         </div>
       </div>
+
+      <style>{`
+        .about-grid {
+          display: grid;
+          grid-template-columns: 45% 55%;
+          min-height: 100vh;
+        }
+        .about-image-col {
+          min-height: 100vh;
+        }
+        @media (max-width: 768px) {
+          .about-grid {
+            grid-template-columns: 1fr;
+            min-height: unset;
+          }
+          .about-image-col {
+            min-height: 55vw !important;
+            max-height: 420px;
+          }
+        }
+      `}</style>
     </section>
   );
 }

@@ -30,7 +30,7 @@ const services = [
   {
     icon: "◻",
     num: "05",
-    title: "Edicion",
+    title: "Edición",
     desc: "Edición de videos con ritmo, storytelling y tendencias digitales para generar impacto y retención.",
   },
   {
@@ -59,24 +59,29 @@ export default function Services() {
         alignItems: "center",
       }}
     >
-      <div style={{
-        width:    "100%",
-        maxWidth: "1000px",
-        margin:   "0 auto",
-        padding:  "80px 80px",
-      }}>
+      <div
+        className="services-container"
+        style={{
+          width:    "100%",
+          maxWidth: "1000px",
+          margin:   "0 auto",
+          /* mobile: 40px 20px | desktop: 80px */
+          padding:  "clamp(40px, 8vw, 80px) clamp(20px, 6vw, 80px)",
+        }}
+      >
 
         {/* ── Header ── */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
+          className="services-header"
           style={{
             display:        "flex",
-            alignItems:     "flex-end",
-            justifyContent: "space-between",
-            gap:            "40px",
-            marginBottom:   "48px",
+            /* mobile: column; desktop: row (via CSS) */
+            flexDirection:  "column",
+            gap:            "clamp(20px, 4vw, 40px)",
+            marginBottom:   "clamp(32px, 5vw, 48px)",
           }}
         >
           <div>
@@ -98,7 +103,7 @@ export default function Services() {
             <h2 style={{
               fontFamily:    "var(--font-display)",
               color:         "var(--noir)",
-              fontSize:      "clamp(2.4rem, 4vw, 3.6rem)",
+              fontSize:      "clamp(2.2rem, 5vw, 3.6rem)",
               fontWeight:    300,
               lineHeight:    1.08,
               letterSpacing: "-0.025em",
@@ -114,6 +119,7 @@ export default function Services() {
             href="#contact"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
+            className="services-cta"
             style={{
               display:        "inline-flex",
               alignItems:     "center",
@@ -127,8 +133,8 @@ export default function Services() {
               letterSpacing:  "0.15em",
               textTransform:  "uppercase" as const,
               textDecoration: "none",
-              flexShrink:     0,
-              alignSelf:      "flex-end",
+              /* en mobile ocupa el ancho del contenido, alineado a la izquierda */
+              alignSelf:      "flex-start",
             }}
           >
             Hablemos →
@@ -136,17 +142,21 @@ export default function Services() {
         </motion.div>
 
         {/* ── Grid de servicios ── */}
-        <div style={{
-          display:             "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          border:              "1px solid rgba(26,0,15,0.08)",
-        }}>
+        <div
+          className="services-grid"
+          style={{
+            display:             "grid",
+            /*
+             * mobile  : 1 columna
+             * tablet+ : 2 columnas  (via CSS)
+             * desktop : 3 columnas  (via CSS)
+             */
+            gridTemplateColumns: "1fr",
+            border:              "1px solid rgba(26,0,15,0.08)",
+          }}
+        >
           {services.map((s, i) => {
             const isHovered = hovered === s.num;
-            // borde derecho: no en la última columna de cada fila
-            const noBorderRight = (i + 1) % 3 === 0;
-            // borde bottom: no en la última fila
-            const noBorderBottom = i >= services.length - 3;
 
             return (
               <motion.div
@@ -156,21 +166,26 @@ export default function Services() {
                 transition={{ duration: 0.6, delay: 0.07 * i }}
                 onMouseEnter={() => setHovered(s.num)}
                 onMouseLeave={() => setHovered(null)}
+                className={`service-card service-card-${i}`}
                 style={{
-                  position:      "relative",
-                  padding:       "36px 32px",
-                  cursor:        "default",
-                  background:    isHovered ? "var(--pink)" : "transparent",
-                  transition:    "background 0.3s ease",
-                  borderRight:   noBorderRight  ? "none" : "1px solid rgba(26,0,15,0.08)",
-                  borderBottom:  noBorderBottom ? "none" : "1px solid rgba(26,0,15,0.08)",
+                  position:   "relative",
+                  padding:    "clamp(24px, 4vw, 36px) clamp(20px, 3vw, 32px)",
+                  cursor:     "default",
+                  background: isHovered ? "var(--pink)" : "transparent",
+                  transition: "background 0.3s ease",
+                  /*
+                   * Los bordes internos se calculan en CSS según las columnas
+                   * activas. Aquí ponemos el borde bottom siempre como base;
+                   * el media query lo ajustará.
+                   */
+                  borderBottom: "1px solid rgba(26,0,15,0.08)",
                 }}
               >
                 {/* Número top-right */}
                 <span style={{
                   position:      "absolute",
-                  top:           "20px",
-                  right:         "20px",
+                  top:           "16px",
+                  right:         "16px",
                   fontFamily:    "var(--font-body)",
                   fontSize:      "11px",
                   color:         "rgba(26,0,15,0.12)",
@@ -181,11 +196,11 @@ export default function Services() {
 
                 {/* Ícono */}
                 <span style={{
-                  display:     "block",
-                  fontSize:    "18px",
-                  marginBottom:"20px",
-                  color:       isHovered ? "var(--noir)" : "var(--pink-deep)",
-                  transition:  "color 0.3s ease",
+                  display:      "block",
+                  fontSize:     "18px",
+                  marginBottom: "20px",
+                  color:        isHovered ? "var(--noir)" : "var(--pink-deep)",
+                  transition:   "color 0.3s ease",
                 }}>
                   {s.icon}
                 </span>
@@ -193,7 +208,7 @@ export default function Services() {
                 {/* Título */}
                 <h3 style={{
                   fontFamily:    "var(--font-display)",
-                  fontSize:      "1.2rem",
+                  fontSize:      "clamp(1rem, 2vw, 1.2rem)",
                   fontWeight:    600,
                   color:         "var(--noir)",
                   margin:        "0 0 12px",
@@ -206,7 +221,7 @@ export default function Services() {
                 {/* Descripción */}
                 <p style={{
                   fontFamily: "var(--font-body)",
-                  fontSize:   "13px",
+                  fontSize:   "clamp(12px, 1.2vw, 13px)",
                   lineHeight: 1.75,
                   color:      "var(--noir)",
                   opacity:    isHovered ? 0.75 : 0.55,
@@ -222,6 +237,76 @@ export default function Services() {
         </div>
 
       </div>
+
+      {/*
+       * ── Responsive overrides ────────────────────────────────────────────
+       *
+       * Los bordes internos del grid dependen del número de columnas
+       * activo en cada breakpoint, por eso se calculan aquí y no en
+       * el inline style (que no conoce el layout real al renderizar).
+       */}
+      <style>{`
+
+        /* ── Tablet: 2 columnas (≥ 600px) ── */
+        @media (min-width: 600px) {
+          .services-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+
+          /* borde derecho: toda tarjeta par (columna 1 en 0-index) */
+          .services-grid .service-card:nth-child(odd) {
+            border-right: 1px solid rgba(26,0,15,0.08);
+          }
+
+          /* quitar borde inferior de las últimas 2 tarjetas */
+          .services-grid .service-card:nth-last-child(-n+2) {
+            border-bottom: none !important;
+          }
+        }
+
+        /* ── Desktop: 3 columnas (≥ 900px) ── */
+        @media (min-width: 900px) {
+          .services-header {
+            flex-direction:  row !important;
+            align-items:     flex-end !important;
+            justify-content: space-between !important;
+          }
+
+          .services-cta {
+            align-self: flex-end !important;
+            flex-shrink: 0;
+          }
+
+          .services-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+          }
+
+          /* Resetear bordes del layout de 2 columnas */
+          .services-grid .service-card:nth-child(odd) {
+            border-right: none;
+          }
+          .services-grid .service-card:nth-last-child(-n+2) {
+            border-bottom: 1px solid rgba(26,0,15,0.08) !important;
+          }
+
+          /* borde derecho: no en col 3 (cada 3er hijo) */
+          .services-grid .service-card:not(:nth-child(3n)) {
+            border-right: 1px solid rgba(26,0,15,0.08);
+          }
+
+          /* sin borde inferior en la última fila (últimas 3 tarjetas) */
+          .services-grid .service-card:nth-last-child(-n+3) {
+            border-bottom: none !important;
+          }
+        }
+
+        /* ── Mobile: sin borde inferior en la última tarjeta ── */
+        @media (max-width: 599px) {
+          .services-grid .service-card:last-child {
+            border-bottom: none !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
